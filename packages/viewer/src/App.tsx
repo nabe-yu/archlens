@@ -172,6 +172,19 @@ function App(): ReactNode {
   const [tab, setTab] = useState<number>(0);
   const [namespaceLevel, setNamespaceLevel] = useState<number>(2); // デフォルト2階層
 
+  // 選択項目のref管理
+  const itemRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+  // 選択が変わったら該当要素をスクロール
+  useEffect(() => {
+    if (selected?.data?.name) {
+      const ref = itemRefs.current[selected.data.name];
+      if (ref) {
+        ref.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+  }, [selected]);
+
   // 選択が変わったらタブをリセット
   useEffect(() => {
     setTab(0);
@@ -208,30 +221,35 @@ function App(): ReactNode {
     <Box key={ns} mb={2}>
       <Typography variant="subtitle2" fontWeight={700} color="text.secondary" sx={{ pl: 1, mb: 0.5 }}>{ns}</Typography>
       {classes.map(cls => (
-        <Card key={cls.name} variant="outlined" sx={{
-          mb: 1,
-          cursor: 'pointer',
-          borderColor: selected?.data?.name === cls.name ? 'primary.main' : '#e0e3e8',
-          background: '#fff',
-          transition: 'background 0.2s, border-color 0.2s',
-          boxShadow: selected?.data?.name === cls.name ? '0 0 0 2px #1976d233' : undefined,
-          '&:hover': { background: '#f5f6fa' }
-        }} onClick={() => setSelected({ type: 'class', data: cls })}>
-          <CardContent>
-            <Box display="flex" alignItems="center" gap={1} mb={1}>
-              <Chip label="class" size="small" sx={{ bgcolor: '#1976d2', color: '#fff', fontWeight: 700 }} />
-              <Typography variant="h6" color="text.primary">{cls.name}</Typography>
-            </Box>
-            {cls.summary && <Typography color="text.secondary" mb={1}>{cls.summary}</Typography>}
-            <Box display="flex" gap={1} flexWrap="wrap" mb={1}>
-              <Chip label={`属性: ${(cls.attributes || []).length}`} size="small" sx={{ bgcolor: '#e3f2fd', color: '#1976d2' }} />
-              <Chip label={`メソッド: ${(cls.methods || []).length}`} size="small" sx={{ bgcolor: '#e3f2fd', color: '#1976d2' }} />
-            </Box>
-            {(cls.dependencies && cls.dependencies.length > 0) && (
-              <Typography variant="caption" color="text.secondary">依存: {cls.dependencies.join(', ')}</Typography>
-            )}
-          </CardContent>
-        </Card>
+        <div
+          key={cls.name}
+          ref={el => { itemRefs.current[cls.name] = el; }}
+        >
+          <Card variant="outlined" sx={{
+            mb: 1,
+            cursor: 'pointer',
+            borderColor: selected?.data?.name === cls.name ? 'primary.main' : '#e0e3e8',
+            background: '#fff',
+            transition: 'background 0.2s, border-color 0.2s',
+            boxShadow: selected?.data?.name === cls.name ? '0 0 0 2px #1976d233' : undefined,
+            '&:hover': { background: '#f5f6fa' }
+          }} onClick={() => setSelected({ type: 'class', data: cls })}>
+            <CardContent>
+              <Box display="flex" alignItems="center" gap={1} mb={1}>
+                <Chip label="class" size="small" sx={{ bgcolor: '#1976d2', color: '#fff', fontWeight: 700 }} />
+                <Typography variant="h6" color="text.primary">{cls.name}</Typography>
+              </Box>
+              {cls.summary && <Typography color="text.secondary" mb={1}>{cls.summary}</Typography>}
+              <Box display="flex" gap={1} flexWrap="wrap" mb={1}>
+                <Chip label={`属性: ${(cls.attributes || []).length}`} size="small" sx={{ bgcolor: '#e3f2fd', color: '#1976d2' }} />
+                <Chip label={`メソッド: ${(cls.methods || []).length}`} size="small" sx={{ bgcolor: '#e3f2fd', color: '#1976d2' }} />
+              </Box>
+              {(cls.dependencies && cls.dependencies.length > 0) && (
+                <Typography variant="caption" color="text.secondary">依存: {cls.dependencies.join(', ')}</Typography>
+              )}
+            </CardContent>
+          </Card>
+        </div>
       ))}
     </Box>
   ));
@@ -239,25 +257,30 @@ function App(): ReactNode {
     <Box key={ns} mb={2}>
       <Typography variant="subtitle2" fontWeight={700} color="text.secondary" sx={{ pl: 1, mb: 0.5 }}>{ns}</Typography>
       {interfaces.map(intf => (
-        <Card key={intf.name} variant="outlined" sx={{
-          mb: 1,
-          cursor: 'pointer',
-          borderColor: selected?.data?.name === intf.name ? 'success.main' : '#e0e3e8',
-          background: '#fff',
-          transition: 'background 0.2s, border-color 0.2s',
-          boxShadow: selected?.data?.name === intf.name ? '0 0 0 2px #43a04733' : undefined,
-          '&:hover': { background: '#f5f6fa' }
-        }} onClick={() => setSelected({ type: 'interface', data: intf })}>
-          <CardContent>
-            <Box display="flex" alignItems="center" gap={1} mb={1}>
-              <Chip label="interface" size="small" sx={{ bgcolor: '#43a047', color: '#fff', fontWeight: 700 }} />
-              <Typography variant="h6" color="text.primary">{intf.name}</Typography>
-            </Box>
-            <Box display="flex" gap={1} flexWrap="wrap" mb={1}>
-              <Chip label={`メソッド: ${(intf.methods || []).length}`} size="small" sx={{ bgcolor: '#e8f5e9', color: '#388e3c' }} />
-            </Box>
-          </CardContent>
-        </Card>
+        <div
+          key={intf.name}
+          ref={el => { itemRefs.current[intf.name] = el; }}
+        >
+          <Card variant="outlined" sx={{
+            mb: 1,
+            cursor: 'pointer',
+            borderColor: selected?.data?.name === intf.name ? 'success.main' : '#e0e3e8',
+            background: '#fff',
+            transition: 'background 0.2s, border-color 0.2s',
+            boxShadow: selected?.data?.name === intf.name ? '0 0 0 2px #43a04733' : undefined,
+            '&:hover': { background: '#f5f6fa' }
+          }} onClick={() => setSelected({ type: 'interface', data: intf })}>
+            <CardContent>
+              <Box display="flex" alignItems="center" gap={1} mb={1}>
+                <Chip label="interface" size="small" sx={{ bgcolor: '#43a047', color: '#fff', fontWeight: 700 }} />
+                <Typography variant="h6" color="text.primary">{intf.name}</Typography>
+              </Box>
+              <Box display="flex" gap={1} flexWrap="wrap" mb={1}>
+                <Chip label={`メソッド: ${(intf.methods || []).length}`} size="small" sx={{ bgcolor: '#e8f5e9', color: '#388e3c' }} />
+              </Box>
+            </CardContent>
+          </Card>
+        </div>
       ))}
     </Box>
   ));
@@ -406,7 +429,18 @@ function App(): ReactNode {
           <Typography variant="subtitle1" fontWeight="bold" gutterBottom>インターフェース一覧</Typography>
           {interfaceCards}
         </MuiPaper>
-        <MuiPaper sx={{ flex: 4, minWidth: 0, p: 3, display: 'flex', flexDirection: 'column', overflowY: 'auto', bgcolor: 'inherit' }}>
+        <MuiPaper sx={{
+          flex: 8,
+          minWidth: 0,
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          overflowY: 'auto',
+          bgcolor: 'inherit',
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+        }}>
           <Typography variant="subtitle1" fontWeight="bold" gutterBottom>詳細ビュー</Typography>
           {detail}
         </MuiPaper>
