@@ -1,0 +1,56 @@
+{
+  "classes": [
+    {
+      "name": "OrderController",
+      "namespace": "MyApp.Controllers",
+      "summary": "注文情報の取得・作成を担当するWeb APIコントローラー。",
+      "attributes": ["orderUseCase: OrderUseCase"],
+      "methods": [
+        { "name": "GetOrder", "summary": "注文情報を取得。" },
+        { "name": "CreateOrder", "summary": "新規注文を作成。" }
+      ],
+      "dependencies": ["OrderUseCase"]
+    },
+    {
+      "name": "OrderUseCase",
+      "namespace": "MyApp.UseCases",
+      "summary": "注文に関するユースケース処理。",
+      "attributes": ["orderRepository: IOrderRepository"],
+      "methods": [
+        { "name": "GetOrderById", "summary": "IDで注文取得。" },
+        { "name": "CreateOrder", "summary": "注文を新規作成。" }
+      ],
+      "dependencies": ["IOrderRepository"],
+      "implements": ["IOrderUseCase"]
+    },
+    {
+      "name": "OrderRepository",
+      "namespace": "MyApp.Repositories",
+      "summary": "注文データの永続化を担当。",
+      "attributes": ["db: DbContext"],
+      "methods": [
+        { "name": "FindById", "summary": "IDで注文取得。" },
+        { "name": "Save", "summary": "注文を保存。" }
+      ],
+      "implements": ["IOrderRepository"]
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "IOrderUseCase",
+      "namespace": "MyApp.UseCases",
+      "methods": [
+        { "name": "GetOrderById", "summary": "IDで注文取得。" },
+        { "name": "CreateOrder", "summary": "注文を新規作成。" }
+      ]
+    },
+    {
+      "name": "IOrderRepository",
+      "namespace": "MyApp.Repositories",
+      "methods": [
+        { "name": "FindById", "summary": "IDで注文取得。" },
+        { "name": "Save", "summary": "注文を保存。" }
+      ]
+    }
+  ]
+} 

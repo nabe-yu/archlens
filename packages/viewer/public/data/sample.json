@@ -1,0 +1,63 @@
+{
+  "classes": [
+    {
+      "name": "UserController",
+      "namespace": "MyApp.Controllers",
+      "summary": "ユーザー情報の取得・登録を担当するコントローラー。",
+      "attributes": ["userService: UserService"],
+      "methods": [
+        { "name": "GetUser", "summary": "ユーザー情報を取得する。" },
+        { "name": "RegisterUser", "summary": "新規ユーザーを登録する。" }
+      ],
+      "dependencies": ["UserService"]
+    },
+    {
+      "name": "UserService",
+      "namespace": "MyApp.Services",
+      "summary": "ユーザー関連のビジネスロジックを提供。",
+      "attributes": ["userRepository: IUserRepository"],
+      "methods": [
+        { "name": "GetById", "summary": "IDでユーザーを取得。" },
+        { "name": "Create", "summary": "ユーザーを新規作成。" }
+      ],
+      "dependencies": ["IUserRepository"],
+      "implements": ["IUserService"]
+    },
+    {
+      "name": "AdminService",
+      "namespace": "MyApp.Services",
+      "summary": "管理者向けのサービス。UserServiceを継承。",
+      "attributes": ["adminRepository: IAdminRepository"],
+      "methods": [
+        { "name": "GetAdminList", "summary": "管理者一覧を取得。" }
+      ],
+      "dependencies": ["IAdminRepository"],
+      "extends": "UserService"
+    }
+  ],
+  "interfaces": [
+    {
+      "name": "IUserService",
+      "namespace": "MyApp.Services",
+      "methods": [
+        { "name": "GetById", "summary": "IDでユーザーを取得。" },
+        { "name": "Create", "summary": "ユーザーを新規作成。" }
+      ]
+    },
+    {
+      "name": "IUserRepository",
+      "namespace": "MyApp.Repositories",
+      "methods": [
+        { "name": "FindById", "summary": "IDでユーザー取得。" },
+        { "name": "Save", "summary": "ユーザーを保存。" }
+      ]
+    },
+    {
+      "name": "IAdminRepository",
+      "namespace": "MyApp.Repositories",
+      "methods": [
+        { "name": "FindAll", "summary": "全管理者を取得。" }
+      ]
+    }
+  ]
+} 

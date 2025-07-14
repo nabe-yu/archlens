@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": false,
+    "jsx": "react-jsx",
+    "rootDir": "packages/viewer/src",
+    "outDir": "packages/viewer/dist"
+  },
+  "include": [
+    "packages/viewer/src/**/*.ts",
+    "packages/viewer/src/**/*.tsx",
+    "packages/viewer/src/**/*.js",
+    "packages/viewer/src/**/*.jsx"
+  ],
+  "exclude": ["node_modules", "packages/viewer/dist", "packages/viewer/tests", "**/*.test.*"]
+}
